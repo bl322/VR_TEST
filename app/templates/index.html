@@ -200,13 +200,13 @@
 		Please click <img width="35" src="static/start.png"> first >>>
 	</div>
 	<script>
-		var words =["elbow","hand","head","leg"]
-		var end = 15.8
+		var words =["Bank of China Tower","Hong Kong Observation Wheel","Star Ferry Pier","Hong Kong Convention and Exhibition Centre"]
+		var end = 12
 		var aobj ={
-			'elbow':[7.0,10.5],  //我猜测是每个单词在音频文件的位置！
-			'hand':[2.0,4.6],
-			'head':[0,1.8],
-			'leg':[4.9,6.9]
+			'Bank of China Tower':[0,1.9],
+			'Hong Kong Observation Wheel':[2.0,4.6],			
+			'Star Ferry Pier':[5.0,6.9], 			
+			'Hong Kong Convention and Exhibition Centre':[7.2,11]
 		}
 		let index = 0
 		let answer = ''
@@ -275,52 +275,54 @@
 								if (!document.getElementsByClassName(answer+'-text')[0].getAttribute('visible')) {
 									document.getElementsByClassName(answer+'-text')[0].setAttribute('visible', "true")
 								}
-								if (u_answer === answer) {
-									//更改符号
-									text_el.children[0].setAttribute('src', "#correct")
-									_check.children[0].setAttribute('src', "#correct")
-									_check.setAttribute("visible", true)
-									sound.currentTime = 0
-									sound.play();
-									setTimeout(function() {
-										sound.pause()
-										// todo 改成特效？
-										if (index+1 == words.length) {
-											alert('You have completed this course！');
-											document.getElementsByClassName('btn')[0].innerHTML="Learn again!",
-											document.getElementById('mainscene').setAttribute('visible', 'false')
-											document.getElementById('sound').style.display="none"
-											clearScene()
-											$('.container').show()
-										}
-									}, 1500)
-									console.log('正确')
-									// 取消跟踪
-									_this.children[0].classList.remove("link")
-									flag = 1;
-									let count = parseInt(index+1)
-									document.getElementById('res-count').setAttribute("value", "Result(" + count + "/5)")
-									// 标记：答对之后，开始下一题之前，不要再播放错误音频
-									answer = ''
-								} else {
-									let word = words[index]
-									console.log('错误',word,u_answer)
-									flag = 0;
-									sound.currentTime = 2
-									sound.play();
-									_check.children[0].setAttribute('src', "#wrong")
-									_check.setAttribute("visible", true)
-									
-									let dur =Math.ceil((aobj[word][1] - aobj[word][0]) *1000) 
-									setTimeout(function() {
-										sound.pause()
-										sound.currentTime = aobj[word][0]
-										sound.play();
-										setTimeout(function() {
-											sound.pause()
-										}, dur)
-									}, 1500)
+						if (u_answer === answer) {
+							//更改符号
+							text_el.children[0].setAttribute('src', "#correct");
+							_check.children[0].setAttribute('src', "#correct");
+							_check.setAttribute("visible", true);
+							sound.src = 'true.mp3';
+							sound.currentTime = 0;
+							sound.play();
+							setTimeout(function() {
+								sound.pause();
+								// todo 改成特效？
+								if (index+1 == words.length) {
+									alert('You have completed this course！');
+									document.getElementsByClassName('btn')[0].innerHTML="Learn again!",
+									document.getElementById('mainscene').setAttribute('visible', 'false');
+									document.getElementById('sound').style.display="none";
+									clearScene();
+									$('.container').show();
 								}
+							}, 1500);
+							console.log('正确');
+							// 取消跟踪
+							_this.children[0].classList.remove("link");
+							flag = 1;
+							let count = parseInt(index+1);
+							document.getElementById('res-count').setAttribute("value", "Result(" + count + "/5)");
+							// 标记：答对之后，开始下一题之前，不要再播放错误音频
+							answer = '';
+						} else {
+							let word = words[index];
+							console.log('错误', word, u_answer);
+							flag = 0;
+							sound.src = 'false.mp3';
+							sound.currentTime = 0;
+							sound.play();
+							_check.children[0].setAttribute('src', "#wrong");
+							_check.setAttribute("visible", true);
+
+							let dur = Math.ceil((aobj[word][1] - aobj[word][0]) * 1000); 
+							setTimeout(function() {
+								sound.pause();
+								sound.currentTime = aobj[word][0];
+								sound.play();
+								setTimeout(function() {
+									sound.pause();
+								}, dur);
+							}, 1500);
+						}
 							} else {
 								if (answer == '') {
 									$('.tips').show(300)
